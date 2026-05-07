@@ -1,0 +1,12 @@
+name = "unittest"
+version = "0.1.0"
+description = "Test assertion helpers for Donna"
+licences = ["MIT"]
+repository = { type = "github", user = "donna-lang", repo = "unittest" }
+links = [{ title = "Docs", href = "https://donna-lang.github.io/unittest/" }]
+
+[dependencies]
+donna = { git = "https://github.com/donna-lang/donna_stdlib", version = ">=0.1.0 and <1.0.0" }
+
+[dev-dependencies]
+

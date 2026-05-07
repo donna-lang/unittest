@@ -1,0 +1,467 @@
+//// Assertion helpers for Donna tests.
+////
+//// Donna's test runner expects every test function to return a String.
+////
+//// Convention:
+////   "" means the assertion passed.
+////   any non-empty String is printed as the failure message.
+////
+//// This module keeps the original unittest API intact and enriches it with
+//// more assertions for strings, bools, floats, and lists.
+
+import donna/bool
+import donna/float
+import donna/int
+import donna/list
+import donna/string
+
+@external("c", "donna_unittest_float_equal")
+fn donna_unittest_float_equal(actual: Float, expected: Float) -> Bool
+
+@external("c", "donna_unittest_float_near")
+fn donna_unittest_float_near(actual: Float, expected: Float, tolerance: Float) -> Bool
+
+// Apply a dim ANSI color to supporting labels in failure messages.
+//
+// The label is intentionally separated from the user value so failures scan
+// like a small diff:
+//
+//   expected: "hello"
+//   got:      "hullo"
+fn dim(s: String) -> String:
+  "\x1b[2m" <> s <> "\x1b[0m"
+
+// Format one labeled line of failure output.
+//
+// This is private because callers should use assertion functions instead of
+// depending on the exact display layout.
+fn detail(label: String, value: String) -> String:
+  dim("    " <> label) <> value
+
+// Quote a String value for failure messages.
+//
+// The current Donna stdlib does not expose escaping helpers, so this keeps the
+// display simple and predictable for ASCII strings.
+fn quote(s: String) -> String:
+  "\"" <> s <> "\""
+
+// Render a Bool in the same style as donna/bool.to_string.
+//
+// Keeping this small wrapper near the assertions makes the formatter names
+// symmetrical with show_int/show_string/show_float below.
+fn show_bool(value: Bool) -> String:
+  bool.to_string(value)
+
+// Render an Int in assertion output.
+fn show_int(value: Int) -> String:
+  int.to_string(value)
+
+// Render a String in assertion output.
+fn show_string(value: String) -> String:
+  quote(value)
+
+// Render a Float in assertion output.
+fn show_float(value: Float) -> String:
+  float.to_string(value)
+
+// Build the standard two-line expected/got failure.
+//
+// Most assertions use this helper so new failure messages stay consistent.
+fn expected_got(expected: String, actual: String) -> String:
+  detail("expected: ", expected)
+  <> "\n"
+  <> detail("got:      ", actual)
+
+// Build the standard one-line failure for predicate assertions.
+//
+// Predicate assertions are things like "string contains substring" where
+// expected/got alone would be less readable than a direct explanation.
+fn predicate_failed(message: String) -> String:
+  detail("expected: ", message)
+
+// Return True when an assertion String is empty.
+//
+// This helper is used by `all` to drop passing assertions and keep only the
+// messages that matter.
+fn passed(result: String) -> Bool:
+  string.is_empty(result)
+
+// Join only failing assertion messages.
+//
+// Multiple assertions are usually concatenated in Donna tests. `all` gives
+// users a cleaner way to combine many assertions while avoiding extra blank
+// lines from passed checks.
+fn join_failures(results: List(String), acc: List(String)) -> List(String):
+  case results:
+    [] -> list.reverse(acc)
+    [result, ..rest] ->
+      case passed(result):
+        True -> join_failures(rest, acc)
+        False -> join_failures(rest, [result, ..acc])
+
+// Return "" when `condition` is True, otherwise return `message`.
+//
+// This is private because public assertions should include domain-specific
+// messages, but centralizing the branch keeps the public functions very small.
+fn assert_that(condition: Bool, message: String) -> String:
+  case condition:
+    True -> ""
+    False -> message
+
+/// Combine many assertion results into one test result.
+///
+/// Passing assertion results (`""`) are ignored. Failing results are joined
+/// with a blank line between them so each failure block remains readable.
+///
+/// ```donna
+/// pub fn profile_test() -> String:
+///   should.all([
+///     should.equal_int(2 + 2, 4),
+///     should.equal_string("Donna", "Donna")
+///   ])
+/// ```
+pub fn all(results: List(String)) -> String:
+  string.join(join_failures(results, []), "\n\n")
+
+/// Always return a passing assertion result.
+///
+/// This is useful in pattern matches where one branch is explicitly the
+/// success case and the other branch returns `should.fail(...)`.
+///
+/// ```donna
+/// pub fn success_branch_test() -> String:
+///   should.pass()
+/// ```
+pub fn pass() -> String:
+  ""
+
+/// Always fail with a caller-provided message.
+///
+/// This keeps the original unittest API exactly available while giving tests
+/// an escape hatch for custom conditions.
+///
+/// ```donna
+/// pub fn missing_value_test() -> String:
+///   should.fail("expected Some(value)")
+/// ```
+pub fn fail(msg: String) -> String:
+  detail("fail: ", msg)
+
+/// Assert two integers are equal.
+///
+/// This keeps the original unittest function name and signature.
+///
+/// ```donna
+/// pub fn answer_test() -> String:
+///   should.equal_int(40 + 2, 42)
+/// ```
+pub fn equal_int(actual: Int, expected: Int) -> String:
+  assert_that(
+    actual == expected,
+    expected_got(show_int(expected), show_int(actual))
+  )
+
+/// Assert two integers are not equal.
+///
+/// ```donna
+/// pub fn changed_test() -> String:
+///   should.not_equal_int(3, 0)
+/// ```
+pub fn not_equal_int(actual: Int, unexpected: Int) -> String:
+  assert_that(
+    actual != unexpected,
+    detail("did not expect: ", show_int(unexpected))
+  )
+
+/// Assert two integers are equal.
+///
+/// Compatibility alias for the original unittest API.
+///
+/// ```donna
+/// pub fn alias_test() -> String:
+///   should.equal(7, 7)
+/// ```
+pub fn equal(actual: Int, expected: Int) -> String:
+  equal_int(actual, expected)
+
+/// Assert two strings are equal.
+///
+/// This keeps the original unittest function name and signature.
+///
+/// ```donna
+/// pub fn greeting_test() -> String:
+///   should.equal_string("hello", "hello")
+/// ```
+pub fn equal_string(actual: String, expected: String) -> String:
+  assert_that(
+    string.equal(actual, expected),
+    expected_got(show_string(expected), show_string(actual))
+  )
+
+/// Assert two strings are not equal.
+///
+/// ```donna
+/// pub fn slug_changes_test() -> String:
+///   should.not_equal_string("hello-world", "Hello World")
+/// ```
+pub fn not_equal_string(actual: String, unexpected: String) -> String:
+  assert_that(
+    bool.not(string.equal(actual, unexpected)),
+    detail("did not expect: ", show_string(unexpected))
+  )
+
+/// Assert two Bool values are equal.
+///
+/// ```donna
+/// pub fn flag_test() -> String:
+///   should.equal_bool(True, True)
+/// ```
+pub fn equal_bool(actual: Bool, expected: Bool) -> String:
+  assert_that(
+    actual == expected,
+    expected_got(show_bool(expected), show_bool(actual))
+  )
+
+/// Assert two Bool values are not equal.
+///
+/// ```donna
+/// pub fn toggled_test() -> String:
+///   should.not_equal_bool(True, False)
+/// ```
+pub fn not_equal_bool(actual: Bool, unexpected: Bool) -> String:
+  assert_that(
+    actual != unexpected,
+    detail("did not expect: ", show_bool(unexpected))
+  )
+
+/// Assert two Float values are exactly equal.
+///
+/// For calculations, prefer `near_float`; exact Float equality is best for
+/// parsed literals, constants, and values that should not accumulate rounding
+/// error.
+///
+/// ```donna
+/// pub fn literal_float_test() -> String:
+///   should.equal_float(1.5, 1.5)
+/// ```
+pub fn equal_float(actual: Float, expected: Float) -> String:
+  assert_that(
+    donna_unittest_float_equal(actual, expected),
+    expected_got(show_float(expected), show_float(actual))
+  )
+
+/// Assert two Float values are within a tolerance.
+///
+/// The assertion passes when `abs(actual - expected) <= tolerance`.
+///
+/// ```donna
+/// pub fn approximate_float_test() -> String:
+///   should.near_float(3.141, 3.14, 0.01)
+/// ```
+pub fn near_float(actual: Float, expected: Float, tolerance: Float) -> String:
+  assert_that(
+    donna_unittest_float_near(actual, expected, tolerance),
+    expected_got(
+      show_float(expected) <> " +/- " <> show_float(tolerance),
+      show_float(actual)
+    )
+  )
+
+/// Assert an Int-like truth value is true.
+///
+/// This keeps the original unittest API. It treats zero as false and any
+/// non-zero integer as true.
+///
+/// ```donna
+/// pub fn int_truth_test() -> String:
+///   should.be_true(1)
+/// ```
+pub fn be_true(value: Int) -> String:
+  case value:
+    0 -> expected_got("True", "False")
+    _ -> ""
+
+/// Assert an Int-like truth value is false.
+///
+/// This keeps the original unittest API. It treats zero as false and any
+/// non-zero integer as true.
+///
+/// ```donna
+/// pub fn int_false_test() -> String:
+///   should.be_false(0)
+/// ```
+pub fn be_false(value: Int) -> String:
+  case value:
+    0 -> ""
+    _ -> expected_got("False", "True")
+
+/// Assert a Bool is True.
+///
+/// This keeps the original unittest function name and signature.
+///
+/// ```donna
+/// pub fn predicate_test() -> String:
+///   should.is_true(True)
+/// ```
+pub fn is_true(value: Bool) -> String:
+  equal_bool(value, True)
+
+/// Assert a Bool is False.
+///
+/// This keeps the original unittest function name and signature.
+///
+/// ```donna
+/// pub fn predicate_false_test() -> String:
+///   should.is_false(False)
+/// ```
+pub fn is_false(value: Bool) -> String:
+  equal_bool(value, False)
+
+/// Assert a string is empty.
+///
+/// ```donna
+/// pub fn empty_string_test() -> String:
+///   should.is_empty_string("")
+/// ```
+pub fn is_empty_string(actual: String) -> String:
+  assert_that(
+    string.is_empty(actual),
+    expected_got(show_string(""), show_string(actual))
+  )
+
+/// Assert a string is not empty.
+///
+/// ```donna
+/// pub fn non_empty_string_test() -> String:
+///   should.not_empty_string("Donna")
+/// ```
+pub fn not_empty_string(actual: String) -> String:
+  assert_that(
+    bool.not(string.is_empty(actual)),
+    predicate_failed("a non-empty string")
+  )
+
+/// Assert a string contains a substring.
+///
+/// ```donna
+/// pub fn contains_text_test() -> String:
+///   should.contains_string("hello Donna", "Donna")
+/// ```
+pub fn contains_string(actual: String, needle: String) -> String:
+  assert_that(
+    string.contains(actual, needle),
+    predicate_failed(show_string(actual) <> " to contain " <> show_string(needle))
+  )
+
+/// Assert a string does not contain a substring.
+///
+/// ```donna
+/// pub fn excludes_text_test() -> String:
+///   should.not_contains_string("hello Donna", "Python")
+/// ```
+pub fn not_contains_string(actual: String, needle: String) -> String:
+  assert_that(
+    bool.not(string.contains(actual, needle)),
+    predicate_failed(show_string(actual) <> " not to contain " <> show_string(needle))
+  )
+
+/// Assert a string starts with a prefix.
+///
+/// ```donna
+/// pub fn prefix_test() -> String:
+///   should.starts_with("hello Donna", "hello")
+/// ```
+pub fn starts_with(actual: String, prefix: String) -> String:
+  assert_that(
+    string.starts_with(actual, prefix),
+    predicate_failed(show_string(actual) <> " to start with " <> show_string(prefix))
+  )
+
+/// Assert a string ends with a suffix.
+///
+/// ```donna
+/// pub fn suffix_test() -> String:
+///   should.ends_with("hello Donna", "Donna")
+/// ```
+pub fn ends_with(actual: String, suffix: String) -> String:
+  assert_that(
+    string.ends_with(actual, suffix),
+    predicate_failed(show_string(actual) <> " to end with " <> show_string(suffix))
+  )
+
+/// Assert a list is empty.
+///
+/// The function is generic because it never inspects element values.
+///
+/// ```donna
+/// pub fn empty_list_test() -> String:
+///   should.is_empty_list([])
+/// ```
+pub fn is_empty_list(actual: List(a)) -> String:
+  assert_that(
+    list.is_empty(actual),
+    expected_got("an empty list", "a list with " <> show_int(list.length(actual)) <> " item(s)")
+  )
+
+/// Assert a list is not empty.
+///
+/// The function is generic because it only checks the list shape.
+///
+/// ```donna
+/// pub fn non_empty_list_test() -> String:
+///   should.not_empty_list([1, 2, 3])
+/// ```
+pub fn not_empty_list(actual: List(a)) -> String:
+  assert_that(
+    bool.not(list.is_empty(actual)),
+    predicate_failed("a non-empty list")
+  )
+
+/// Assert a list has exactly `expected` elements.
+///
+/// The function is generic because only the length is inspected.
+///
+/// ```donna
+/// pub fn list_length_test() -> String:
+///   should.length_list(["a", "b"], 2)
+/// ```
+pub fn length_list(actual: List(a), expected: Int) -> String:
+  equal_int(list.length(actual), expected)
+
+/// Assert an integer list contains a value.
+///
+/// ```donna
+/// pub fn contains_int_test() -> String:
+///   should.contains_int([1, 2, 3], 2)
+/// ```
+pub fn contains_int(actual: List(Int), expected: Int) -> String:
+  assert_that(
+    list.contains_int(actual, expected),
+    predicate_failed("list to contain " <> show_int(expected))
+  )
+
+/// Assert a string list contains a value.
+///
+/// ```donna
+/// pub fn contains_string_value_test() -> String:
+///   should.contains_string_value(["Donna", "Leaf"], "Leaf")
+/// ```
+pub fn contains_string_value(actual: List(String), expected: String) -> String:
+  assert_that(
+    list.contains_str(actual, expected),
+    predicate_failed("list to contain " <> show_string(expected))
+  )
+
+/// Add context to a failing assertion.
+///
+/// Passing assertions remain empty. Failing assertions are prefixed with the
+/// supplied label so a larger test can explain which step failed.
+///
+/// ```donna
+/// pub fn contextual_test() -> String:
+///   should.because(should.equal_int(1, 2), "checking retry count")
+/// ```
+pub fn because(result: String, reason: String) -> String:
+  case passed(result):
+    True -> ""
+    False -> detail("because: ", reason) <> "\n" <> result

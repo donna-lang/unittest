@@ -1,0 +1,20 @@
+//// Package metadata helpers.
+////
+//// The assertion API lives in `should.donna` so users can write:
+////
+////   import unittest/should
+////
+//// This module intentionally has no `main`: unittest is a library package,
+//// not an application.
+
+/// Return the package version as a string.
+///
+/// Keeping this tiny function gives the generated root module a useful public
+/// value without turning the package into an executable.
+///
+/// ```donna
+/// pub fn version_test() -> String:
+///   unittest.version()
+/// ```
+pub fn version() -> String:
+  "0.1.0"

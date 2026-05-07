@@ -1,0 +1,95 @@
+import donna/string
+import unittest/should
+
+pub fn equal_int_pass_test() -> String:
+  should.equal_int(3, 3) |> should.is_empty_string()
+
+pub fn equal_int_fail_has_expected_and_got_test() -> String:
+  let result = should.equal_int(3, 4)
+  should.all([
+    result |> should.contains_string("expected: "),
+    result |> should.contains_string("4"),
+    result |> should.contains_string("got:"),
+    result |> should.contains_string("3")
+  ])
+
+pub fn old_equal_alias_still_works_test() -> String:
+  should.equal(9, 9) |> should.is_empty_string()
+
+pub fn int_truth_compatibility_test() -> String:
+  should.all([
+    should.be_true(1),
+    should.be_true(42),
+    should.be_false(0)
+  ])
+
+pub fn bool_truth_helpers_test() -> String:
+  should.all([
+    should.is_true(True),
+    should.is_false(False),
+    should.equal_bool(True, True),
+    should.not_equal_bool(True, False)
+  ])
+
+pub fn string_assertions_test() -> String:
+  should.all([
+    should.equal_string("Donna", "Donna"),
+    should.not_equal_string("Donna", "donna"),
+    should.contains_string("hello Donna", "Donna"),
+    should.not_contains_string("hello Donna", "Python"),
+    should.starts_with("hello Donna", "hello"),
+    should.ends_with("hello Donna", "Donna"),
+    should.is_empty_string(""),
+    should.not_empty_string("x")
+  ])
+
+pub fn string_failure_message_test() -> String:
+  let result = should.equal_string("left", "right")
+  should.all([
+    result |> should.contains_string("\"right\""),
+    result |> should.contains_string("\"left\"")
+  ])
+
+pub fn list_assertions_test() -> String:
+  should.all([
+    should.is_empty_list([]),
+    should.not_empty_list([1, 2, 3]),
+    should.length_list(["a", "b"], 2),
+    should.contains_int([1, 2, 3], 2),
+    should.contains_string_value(["Donna", "Leaf"], "Leaf")
+  ])
+
+pub fn all_drops_passing_results_test() -> String:
+  let result = should.all([
+    should.pass(),
+    should.equal_int(1, 1),
+    should.equal_string("a", "a")
+  ])
+  result |> should.is_empty_string()
+
+pub fn all_keeps_failing_results_test() -> String:
+  let result = should.all([
+    should.pass(),
+    should.equal_int(1, 2),
+    should.contains_string("abc", "z")
+  ])
+  should.all([
+    result |> should.contains_string("expected: "),
+    result |> should.contains_string("2"),
+    result |> should.contains_string("to contain")
+  ])
+
+pub fn because_only_adds_context_on_failure_test() -> String:
+  should.all([
+    should.because(should.pass(), "nothing to see") |> should.is_empty_string(),
+    should.because(should.fail("boom"), "setup step") |> should.contains_string("setup step")
+  ])
+
+pub fn float_assertions_test() -> String:
+  should.all([
+    should.equal_float(1.5, 1.5),
+    should.near_float(1.49, 1.5, 0.02)
+  ])
+
+pub fn explicit_fail_test() -> String:
+  should.fail("custom failure") |> should.contains_string("custom failure")
