@@ -1,10 +1,10 @@
 # unittest
 
 <img src="https://img.shields.io/badge/Donna-unittest-FF6347?style=for-the-badge" alt="Donna unittest"/>
-
 <a href="https://donna-lang.github.io/unittest/">
   <img src="https://img.shields.io/badge/Docs-Read-2F81F7?style=for-the-badge" alt="Docs - Read"/>
 </a>
+<img src="https://img.shields.io/github/actions/workflow/status/donna-lang/unittest/test.yml?branch=main&label=Test&style=for-the-badge" alt="Test status"/>
 
 Test assertion helpers for the [Donna](https://github.com/donna-lang/donna) programming language.
 
@@ -87,4 +87,3 @@ should.because(should.equal_int(retries, 3), "checking retry count")
 ## Licence
 
 MIT
-

@@ -5,6 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>unittest - API</title>
 <style>@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+.copy-code { margin-left: auto; border: 1px solid var(--border); border-radius: 6px; background: rgba(255,255,255,0.04); color: var(--text-dim); font-family: var(--mono); font-size: 0.68rem; padding: 4px 8px; cursor: pointer; }
+.copy-code:hover { color: var(--text); border-color: rgba(255,255,255,0.18); }
+.hl-kw { color: var(--orange); font-weight: 600; }
+.hl-type { color: oklch(0.72 0.1 260); }
+.hl-constructor { color: oklch(0.76 0.1 250); font-weight: 600; }
+.hl-fn { color: oklch(0.75 0.12 205); }
+.hl-var { color: oklch(0.78 0.08 90); }
+.hl-module { color: oklch(0.74 0.09 185); }
+.hl-op { color: oklch(0.8 0.12 70); font-weight: 600; }
+.hl-str { color: oklch(0.74 0.1 145); }
+.hl-num { color: oklch(0.72 0.1 300); }
+.hl-comment { color: rgba(245,240,236,0.32); font-style: italic; }
+body.theme-light .hl-comment { color: rgba(36,32,29,0.42); }
+body.page-package-docs .module-doc pre { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin: 12px 0 18px; max-width: 100%; }
+body.page-package-docs .module-doc pre code { display: block; padding: 14px 16px; background: none; color: var(--text-dim); overflow-x: auto; font-size: 0.82rem; white-space: pre; }
 
 :root {
   --orange: oklch(0.62 0.19 38);
@@ -220,7 +235,7 @@ body.page-package-docs .ctor-doc p { margin: 0; }
 <p>import unittest/should</p>
 <p>This module intentionally has no <code>main</code>: unittest is a library package,
 not an application.</p>
-</div><div class="items-section"><h3>Functions</h3><div class="fn-card" id="version"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn version() -&gt; String</code></pre></div><div class="fn-desc"><p>Return the package version as a string.</p>
+</div><div class="items-section"><h3>Functions</h3><div class="fn-card" id="version"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn version() -&gt; String</code></pre></div><div class="fn-desc"><p>Return the package version as a string.</p>
 <p>Keeping this tiny function gives the generated root module a useful public
 value without turning the package into an executable.</p>
 <pre><code class="language-donna">pub fn version_test() -&gt; String:
@@ -233,7 +248,7 @@ value without turning the package into an executable.</p>
 any non-empty String is printed as the failure message.</p>
 <p>This module keeps the original unittest API intact and enriches it with
 more assertions for strings, bools, floats, and lists.</p>
-</div><div class="items-section"><h3>Functions</h3><div class="fn-card" id="all"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn all(results: List(String)) -&gt; String</code></pre></div><div class="fn-desc"><p>Combine many assertion results into one test result.</p>
+</div><div class="items-section"><h3>Functions</h3><div class="fn-card" id="all"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn all(results: List(String)) -&gt; String</code></pre></div><div class="fn-desc"><p>Combine many assertion results into one test result.</p>
 <p>Passing assertion results (<code>&quot;&quot;</code>) are ignored. Failing results are joined
 with a blank line between them so each failure block remains readable.</p>
 <pre><code class="language-donna">pub fn profile_test() -&gt; String:
@@ -242,131 +257,131 @@ with a blank line between them so each failure block remains readable.</p>
     should.equal_string(&quot;Donna&quot;, &quot;Donna&quot;)
   ])
 </code></pre>
-</div></div><div class="fn-card" id="pass"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn pass() -&gt; String</code></pre></div><div class="fn-desc"><p>Always return a passing assertion result.</p>
+</div></div><div class="fn-card" id="pass"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn pass() -&gt; String</code></pre></div><div class="fn-desc"><p>Always return a passing assertion result.</p>
 <p>This is useful in pattern matches where one branch is explicitly the
 success case and the other branch returns <code>should.fail(...)</code>.</p>
 <pre><code class="language-donna">pub fn success_branch_test() -&gt; String:
   should.pass()
 </code></pre>
-</div></div><div class="fn-card" id="fail"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn fail(msg: String) -&gt; String</code></pre></div><div class="fn-desc"><p>Always fail with a caller-provided message.</p>
+</div></div><div class="fn-card" id="fail"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn fail(msg: String) -&gt; String</code></pre></div><div class="fn-desc"><p>Always fail with a caller-provided message.</p>
 <p>This keeps the original unittest API exactly available while giving tests
 an escape hatch for custom conditions.</p>
 <pre><code class="language-donna">pub fn missing_value_test() -&gt; String:
   should.fail(&quot;expected Some(value)&quot;)
 </code></pre>
-</div></div><div class="fn-card" id="equal_int"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn equal_int(actual: Int, expected: Int) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert two integers are equal.</p>
+</div></div><div class="fn-card" id="equal_int"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn equal_int(actual: Int, expected: Int) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert two integers are equal.</p>
 <p>This keeps the original unittest function name and signature.</p>
 <pre><code class="language-donna">pub fn answer_test() -&gt; String:
   should.equal_int(40 + 2, 42)
 </code></pre>
-</div></div><div class="fn-card" id="not_equal_int"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn not_equal_int(actual: Int, unexpected: Int) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert two integers are not equal.</p>
+</div></div><div class="fn-card" id="not_equal_int"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn not_equal_int(actual: Int, unexpected: Int) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert two integers are not equal.</p>
 <pre><code class="language-donna">pub fn changed_test() -&gt; String:
   should.not_equal_int(3, 0)
 </code></pre>
-</div></div><div class="fn-card" id="equal"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn equal(actual: Int, expected: Int) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert two integers are equal.</p>
+</div></div><div class="fn-card" id="equal"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn equal(actual: Int, expected: Int) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert two integers are equal.</p>
 <p>Compatibility alias for the original unittest API.</p>
 <pre><code class="language-donna">pub fn alias_test() -&gt; String:
   should.equal(7, 7)
 </code></pre>
-</div></div><div class="fn-card" id="equal_string"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn equal_string(actual: String, expected: String) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert two strings are equal.</p>
+</div></div><div class="fn-card" id="equal_string"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn equal_string(actual: String, expected: String) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert two strings are equal.</p>
 <p>This keeps the original unittest function name and signature.</p>
 <pre><code class="language-donna">pub fn greeting_test() -&gt; String:
   should.equal_string(&quot;hello&quot;, &quot;hello&quot;)
 </code></pre>
-</div></div><div class="fn-card" id="not_equal_string"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn not_equal_string(actual: String, unexpected: String) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert two strings are not equal.</p>
+</div></div><div class="fn-card" id="not_equal_string"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn not_equal_string(actual: String, unexpected: String) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert two strings are not equal.</p>
 <pre><code class="language-donna">pub fn slug_changes_test() -&gt; String:
   should.not_equal_string(&quot;hello-world&quot;, &quot;Hello World&quot;)
 </code></pre>
-</div></div><div class="fn-card" id="equal_bool"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn equal_bool(actual: Bool, expected: Bool) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert two Bool values are equal.</p>
+</div></div><div class="fn-card" id="equal_bool"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn equal_bool(actual: Bool, expected: Bool) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert two Bool values are equal.</p>
 <pre><code class="language-donna">pub fn flag_test() -&gt; String:
   should.equal_bool(True, True)
 </code></pre>
-</div></div><div class="fn-card" id="not_equal_bool"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn not_equal_bool(actual: Bool, unexpected: Bool) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert two Bool values are not equal.</p>
+</div></div><div class="fn-card" id="not_equal_bool"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn not_equal_bool(actual: Bool, unexpected: Bool) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert two Bool values are not equal.</p>
 <pre><code class="language-donna">pub fn toggled_test() -&gt; String:
   should.not_equal_bool(True, False)
 </code></pre>
-</div></div><div class="fn-card" id="equal_float"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn equal_float(actual: Float, expected: Float) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert two Float values are exactly equal.</p>
+</div></div><div class="fn-card" id="equal_float"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn equal_float(actual: Float, expected: Float) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert two Float values are exactly equal.</p>
 <p>For calculations, prefer <code>near_float</code>; exact Float equality is best for
 parsed literals, constants, and values that should not accumulate rounding
 error.</p>
 <pre><code class="language-donna">pub fn literal_float_test() -&gt; String:
   should.equal_float(1.5, 1.5)
 </code></pre>
-</div></div><div class="fn-card" id="near_float"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn near_float(actual: Float, expected: Float, tolerance: Float) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert two Float values are within a tolerance.</p>
+</div></div><div class="fn-card" id="near_float"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn near_float(actual: Float, expected: Float, tolerance: Float) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert two Float values are within a tolerance.</p>
 <p>The assertion passes when <code>abs(actual - expected) &lt;= tolerance</code>.</p>
 <pre><code class="language-donna">pub fn approximate_float_test() -&gt; String:
   should.near_float(3.141, 3.14, 0.01)
 </code></pre>
-</div></div><div class="fn-card" id="be_true"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn be_true(value: Int) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert an Int-like truth value is true.</p>
+</div></div><div class="fn-card" id="be_true"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn be_true(value: Int) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert an Int-like truth value is true.</p>
 <p>This keeps the original unittest API. It treats zero as false and any
 non-zero integer as true.</p>
 <pre><code class="language-donna">pub fn int_truth_test() -&gt; String:
   should.be_true(1)
 </code></pre>
-</div></div><div class="fn-card" id="be_false"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn be_false(value: Int) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert an Int-like truth value is false.</p>
+</div></div><div class="fn-card" id="be_false"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn be_false(value: Int) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert an Int-like truth value is false.</p>
 <p>This keeps the original unittest API. It treats zero as false and any
 non-zero integer as true.</p>
 <pre><code class="language-donna">pub fn int_false_test() -&gt; String:
   should.be_false(0)
 </code></pre>
-</div></div><div class="fn-card" id="is_true"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn is_true(value: Bool) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a Bool is True.</p>
+</div></div><div class="fn-card" id="is_true"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn is_true(value: Bool) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a Bool is True.</p>
 <p>This keeps the original unittest function name and signature.</p>
 <pre><code class="language-donna">pub fn predicate_test() -&gt; String:
   should.is_true(True)
 </code></pre>
-</div></div><div class="fn-card" id="is_false"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn is_false(value: Bool) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a Bool is False.</p>
+</div></div><div class="fn-card" id="is_false"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn is_false(value: Bool) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a Bool is False.</p>
 <p>This keeps the original unittest function name and signature.</p>
 <pre><code class="language-donna">pub fn predicate_false_test() -&gt; String:
   should.is_false(False)
 </code></pre>
-</div></div><div class="fn-card" id="is_empty_string"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn is_empty_string(actual: String) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a string is empty.</p>
+</div></div><div class="fn-card" id="is_empty_string"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn is_empty_string(actual: String) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a string is empty.</p>
 <pre><code class="language-donna">pub fn empty_string_test() -&gt; String:
   should.is_empty_string(&quot;&quot;)
 </code></pre>
-</div></div><div class="fn-card" id="not_empty_string"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn not_empty_string(actual: String) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a string is not empty.</p>
+</div></div><div class="fn-card" id="not_empty_string"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn not_empty_string(actual: String) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a string is not empty.</p>
 <pre><code class="language-donna">pub fn non_empty_string_test() -&gt; String:
   should.not_empty_string(&quot;Donna&quot;)
 </code></pre>
-</div></div><div class="fn-card" id="contains_string"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn contains_string(actual: String, needle: String) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a string contains a substring.</p>
+</div></div><div class="fn-card" id="contains_string"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn contains_string(actual: String, needle: String) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a string contains a substring.</p>
 <pre><code class="language-donna">pub fn contains_text_test() -&gt; String:
   should.contains_string(&quot;hello Donna&quot;, &quot;Donna&quot;)
 </code></pre>
-</div></div><div class="fn-card" id="not_contains_string"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn not_contains_string(actual: String, needle: String) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a string does not contain a substring.</p>
+</div></div><div class="fn-card" id="not_contains_string"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn not_contains_string(actual: String, needle: String) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a string does not contain a substring.</p>
 <pre><code class="language-donna">pub fn excludes_text_test() -&gt; String:
   should.not_contains_string(&quot;hello Donna&quot;, &quot;Python&quot;)
 </code></pre>
-</div></div><div class="fn-card" id="starts_with"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn starts_with(actual: String, prefix: String) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a string starts with a prefix.</p>
+</div></div><div class="fn-card" id="starts_with"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn starts_with(actual: String, prefix: String) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a string starts with a prefix.</p>
 <pre><code class="language-donna">pub fn prefix_test() -&gt; String:
   should.starts_with(&quot;hello Donna&quot;, &quot;hello&quot;)
 </code></pre>
-</div></div><div class="fn-card" id="ends_with"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn ends_with(actual: String, suffix: String) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a string ends with a suffix.</p>
+</div></div><div class="fn-card" id="ends_with"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn ends_with(actual: String, suffix: String) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a string ends with a suffix.</p>
 <pre><code class="language-donna">pub fn suffix_test() -&gt; String:
   should.ends_with(&quot;hello Donna&quot;, &quot;Donna&quot;)
 </code></pre>
-</div></div><div class="fn-card" id="is_empty_list"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn is_empty_list(actual: List(a)) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a list is empty.</p>
+</div></div><div class="fn-card" id="is_empty_list"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn is_empty_list(actual: List(a)) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a list is empty.</p>
 <p>The function is generic because it never inspects element values.</p>
 <pre><code class="language-donna">pub fn empty_list_test() -&gt; String:
   should.is_empty_list([])
 </code></pre>
-</div></div><div class="fn-card" id="not_empty_list"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn not_empty_list(actual: List(a)) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a list is not empty.</p>
+</div></div><div class="fn-card" id="not_empty_list"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn not_empty_list(actual: List(a)) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a list is not empty.</p>
 <p>The function is generic because it only checks the list shape.</p>
 <pre><code class="language-donna">pub fn non_empty_list_test() -&gt; String:
   should.not_empty_list([1, 2, 3])
 </code></pre>
-</div></div><div class="fn-card" id="length_list"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn length_list(actual: List(a), expected: Int) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a list has exactly <code>expected</code> elements.</p>
+</div></div><div class="fn-card" id="length_list"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn length_list(actual: List(a), expected: Int) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a list has exactly <code>expected</code> elements.</p>
 <p>The function is generic because only the length is inspected.</p>
 <pre><code class="language-donna">pub fn list_length_test() -&gt; String:
   should.length_list([&quot;a&quot;, &quot;b&quot;], 2)
 </code></pre>
-</div></div><div class="fn-card" id="contains_int"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn contains_int(actual: List(Int), expected: Int) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert an integer list contains a value.</p>
+</div></div><div class="fn-card" id="contains_int"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn contains_int(actual: List(Int), expected: Int) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert an integer list contains a value.</p>
 <pre><code class="language-donna">pub fn contains_int_test() -&gt; String:
   should.contains_int([1, 2, 3], 2)
 </code></pre>
-</div></div><div class="fn-card" id="contains_string_value"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn contains_string_value(actual: List(String), expected: String) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a string list contains a value.</p>
+</div></div><div class="fn-card" id="contains_string_value"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn contains_string_value(actual: List(String), expected: String) -&gt; String</code></pre></div><div class="fn-desc"><p>Assert a string list contains a value.</p>
 <pre><code class="language-donna">pub fn contains_string_value_test() -&gt; String:
   should.contains_string_value([&quot;Donna&quot;, &quot;Leaf&quot;], &quot;Leaf&quot;)
 </code></pre>
-</div></div><div class="fn-card" id="because"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><pre><code>pub fn because(result: String, reason: String) -&gt; String</code></pre></div><div class="fn-desc"><p>Add context to a failing assertion.</p>
+</div></div><div class="fn-card" id="because"><div class="code-block"><div class="code-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button></div><pre><code class="language-donna">pub fn because(result: String, reason: String) -&gt; String</code></pre></div><div class="fn-desc"><p>Add context to a failing assertion.</p>
 <p>Passing assertions remain empty. Failing assertions are prefixed with the
 supplied label so a larger test can explain which step failed.</p>
 <pre><code class="language-donna">pub fn contextual_test() -&gt; String:
@@ -460,6 +475,94 @@ supplied label so a larger test can explain which step failed.</p>
   initCodeBlocks();
   initSidebarSpy('.page-package .readme h2, .page-package .readme h3', '.page-package .sidebar-nav a', '');
   initSidebarSpy('.page-package-docs .fn-card[id]', '.page-package-docs .sidebar-nav a', '');
+})();</script>
+<script>(() => {
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function addCopyBar(pre) {
+    if (pre.parentElement && pre.parentElement.classList.contains('code-block')) return;
+    var wrapper = document.createElement('div');
+    wrapper.className = 'code-block';
+    var bar = document.createElement('div');
+    bar.className = 'code-bar';
+    bar.innerHTML = '<div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><button type="button" class="copy-code" aria-label="Copy code">Copy</button>';
+    pre.parentNode.insertBefore(wrapper, pre);
+    wrapper.appendChild(bar);
+    wrapper.appendChild(pre);
+  }
+  function highlightDonna(code) {
+    var html = esc(code);
+    var held = {};
+    var heldCount = 0;
+    function holdKey(n) {
+      var out = '';
+      do {
+        out = String.fromCharCode(65 + (n % 26)) + out;
+        n = Math.floor(n / 26) - 1;
+      } while (n >= 0);
+      return '@@DONNAHL' + out + '@@';
+    }
+    function stash(cls, value) {
+      var key = holdKey(heldCount++);
+      held[key] = '<span class="' + cls + '">' + value + '</span>';
+      return key;
+    }
+    html = html.replace(/(&quot;[^\n]*?&quot;|"[^\n]*?")/g, function(m) { return stash('hl-str', m); });
+    html = html.replace(/(\/\/.*)$/gm, function(m) { return stash('hl-comment', m); });
+    html = html.replace(/(\bimport\s+)([A-Za-z0-9_\/]+)/g, function(_, kw, mod) { return stash('hl-kw', 'import') + ' ' + stash('hl-module', mod); });
+    html = html.replace(/\b([a-z_][A-Za-z0-9_]*)(?=\.)/g, function(m) { return stash('hl-module', m); });
+    html = html.replace(/(\|&gt;\s*)([a-z_][A-Za-z0-9_]*)/g, function(_, op, fn) { return stash('hl-op', op.trim()) + ' ' + stash('hl-fn', fn); });
+    html = html.replace(/(\|&gt;|-&gt;)/g, function(m) { return stash('hl-op', m); });
+    html = html.replace(/\blet\s+([a-z_][A-Za-z0-9_]*)/g, function(_, name) { return stash('hl-kw', 'let') + ' ' + stash('hl-var', name); });
+    html = html.replace(/\b(echo|panic)\s+([a-z_][A-Za-z0-9_]*)\b/g, function(_, kw, name) { return stash('hl-kw', kw) + ' ' + stash('hl-var', name); });
+    html = html.replace(/\bcase\s+([a-z_][A-Za-z0-9_]*)\b(?!\s*\()/g, function(_, name) { return stash('hl-kw', 'case') + ' ' + stash('hl-var', name); });
+    html = html.replace(/\b(pub|fn|type|const|case|if|opaque|external|echo|panic|todo|as)\b/g, function(m) { return stash('hl-kw', m); });
+    html = html.replace(/\b([a-z_][A-Za-z0-9_]*)(?=\s*\()/g, function(m) { return stash('hl-fn', m); });
+    html = html.replace(/\b([A-Z][A-Za-z0-9_]*)(?=\s*\()/g, function(m) { return stash('hl-constructor', m); });
+    html = html.replace(/\b(Int|String|Bool|Float|List|Nil)\b/g, function(m) { return stash('hl-type', m); });
+    html = html.replace(/\b(True|False)\b/g, function(m) { return stash('hl-constructor', m); });
+    html = html.replace(/\b([0-9]+)\b/g, function(m) { return stash('hl-num', m); });
+    html = html.replace(/@@DONNAHL[A-Z]+@@/g, function(m) { return held[m]; });
+    return html;
+  }
+  function shouldHighlight(code) {
+    return code.classList.contains('language-donna') || /\b(pub fn|fn |import |pub type|pub const|case |let )\b/.test(code.textContent);
+  }
+  function applyDonnaHighlight(code) {
+    if (shouldHighlight(code) && !code.dataset.highlighted) {
+      addCopyBar(code.parentElement);
+      code.innerHTML = highlightDonna(code.textContent);
+      code.dataset.highlighted = 'true';
+    }
+  }
+  document.querySelectorAll('.code-block').forEach(function(block) {
+    var bar = block.querySelector('.code-bar');
+    var code = block.querySelector('pre code');
+    if (!bar || !code) return;
+    if (!bar.querySelector('.copy-code')) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'copy-code';
+      btn.setAttribute('aria-label', 'Copy code');
+      btn.textContent = 'Copy';
+      bar.appendChild(btn);
+    }
+    applyDonnaHighlight(code);
+  });
+  document.querySelectorAll('pre code').forEach(function(code) {
+    applyDonnaHighlight(code);
+  });
+  document.addEventListener('click', function(e) {
+    if (!e.target.classList.contains('copy-code')) return;
+    var block = e.target.closest('.code-block');
+    var code = block && block.querySelector('pre code');
+    if (!code) return;
+    navigator.clipboard.writeText(code.textContent).then(function() {
+      e.target.textContent = 'Copied';
+      setTimeout(function() { e.target.textContent = 'Copy'; }, 1200);
+    });
+  });
 })();</script>
 </body>
 </html>
