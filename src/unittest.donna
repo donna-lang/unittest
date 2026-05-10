@@ -2,7 +2,7 @@
 ////
 //// The assertion API lives in `should.donna` so users can write:
 ////
-////   import unittest/should
+//// import unittest/should
 ////
 //// This module intentionally has no `main`: unittest is a library package,
 //// not an application.
